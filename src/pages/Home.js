@@ -228,20 +228,20 @@ export default function Home() {
 
           {/* Status Column */}
           <Column
-            header="Status"
-            body={(rowData) => (
-              <Button
-                label={rowData.status === "active" ? "Active" : "Inactive"}
-                className={`p-button-rounded ${
-                  rowData.status === "active"
-                    ? "p-button-success"
-                    : "p-button-warning"
-                } text-white text-black`}
-                onClick={() => handleStatusChange(rowData)}
-              />
-            )}
-            className="p-2 border border-black"
-          />
+  header="Status"
+  body={(rowData) => (
+    <Button
+      label={rowData.status === "active" ? "Active" : "Inactive"}
+      className={`p-button-rounded ${
+        rowData.status === "active"
+          ? "p-button-success text-white"
+          : "p-button-warning text-white"
+      } text-black`}
+      onClick={() => handleStatusChange(rowData)}
+    />
+  )}
+  className="p-2 border border-black"
+/>
         </DataTable>
       ) : (
         <div className="text-center">
