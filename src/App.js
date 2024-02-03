@@ -1,23 +1,53 @@
-import logo from './logo.svg';
+import { BrowserRouter as Router } from "react-router-dom";
 import './App.css';
+import Navbar from './components/Navbar';
+import AllRoutes from "./AllRoutes";
+import { useEffect, useState } from "react";
+import axios from 'axios';
+import {NextUIProvider} from "@nextui-org/react";
 
 function App() {
+  const [weatherData, setWeatherData] = useState(null);
+
+  const API_KEY = 'b76cdd4398be3adb793792040ef3b161'; // Replace with your OpenWeatherMap API key
+
+  const weatherService = axios.create({
+    baseURL: 'https://api.openweathermap.org/data/2.5',
+  });
+
+  const getWeatherByCoordinates = async (lat, lon) => {
+    try {
+      const response = await weatherService.get('/weather', {
+        params: {
+          lat,
+          lon,
+          appid: API_KEY,
+          units: 'metric',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      const { latitude, longitude } = position.coords;
+      const data = await getWeatherByCoordinates(latitude, longitude);
+      setWeatherData(data);
+    });
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {/* <NextUIProvider> */}
+      <Router>
+        <Navbar weatherData={weatherData} />
+        <AllRoutes />
+      </Router>
+      {/* </NextUIProvider> */}
+
     </div>
   );
 }
